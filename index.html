@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>100 Images</title>
+  <title>Suffer!</title>
   <style>
     body {
       margin: 0;
@@ -10,77 +10,35 @@
       flex-wrap: wrap;
     }
     img {
-      width: 150px; /* change size if you want */
+      width: 150px;
       height: auto;
     }
   </style>
 </head>
 <body>
-  <!-- 100 copies of the same local image -->
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
 
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
+<script>
+  const IMAGE_SRC = "image.jpg";
+  const BATCH_SIZE = 100; // how many to add at a time
 
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
+  function addImages(count) {
+    for (let i = 0; i < count; i++) {
+      const img = document.createElement("img");
+      img.src = IMAGE_SRC;
+      document.body.appendChild(img);
+    }
+  }
 
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
+  // Start with 1000 images
+  addImages(1000);
 
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
+  // Infinite scroll
+  window.addEventListener("scroll", () => {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+      addImages(BATCH_SIZE);
+    }
+  });
+</script>
 
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
-  <img src="image.jpg">
 </body>
 </html>
