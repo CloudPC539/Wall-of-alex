@@ -2,42 +2,80 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8">
-  <title>Suffer!</title>
+  <title>Lag Machine</title>
+
   <style>
-    body {
+    html, body {
       margin: 0;
-      display: flex;
-      flex-wrap: wrap;
+      padding: 0;
+      height: 100%;
+      overflow-y: scroll;
+      background: black;
     }
+
+    /* Grid that perfectly fills the screen */
+    body {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      grid-auto-rows: 150px;
+      gap: 0;
+    }
+
     img {
-      width: 150px;
-      height: auto;
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+
+      /* GPU + CPU pain */
+      filter: blur(0.3px) saturate(130%);
+      animation: wobble 0.6s infinite alternate;
+    }
+
+    @keyframes wobble {
+      from { transform: scale(1) rotate(0deg); }
+      to   { transform: scale(1.02) rotate(0.3deg); }
     }
   </style>
 </head>
 <body>
 
+<audio id="music" src="music.mp3" autoplay loop></audio>
+
 <script>
   const IMAGE_SRC = "image.jpg";
-  const BATCH_SIZE = 100; // how many to add at a time
+  const START_COUNT = 1000;
+  const BATCH_SIZE = 200;
 
   function addImages(count) {
     for (let i = 0; i < count; i++) {
       const img = document.createElement("img");
       img.src = IMAGE_SRC;
+
+      // Extra lag: random style changes
+      img.style.filter = `hue-rotate(${Math.random() * 360}deg) blur(0.4px)`;
+      img.style.animationDuration = (Math.random() * 0.5 + 0.2) + "s";
+
       document.body.appendChild(img);
     }
   }
 
-  // Start with 1000 images
-  addImages(1000);
+  // Initial load
+  addImages(START_COUNT);
 
   // Infinite scroll
   window.addEventListener("scroll", () => {
-    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 500) {
+    if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 300) {
       addImages(BATCH_SIZE);
     }
   });
+
+  // MORE lag: useless background work
+  setInterval(() => {
+    document.querySelectorAll("img").forEach(img => {
+      img.style.transform =
+        `scale(${1 + Math.random() * 0.05}) rotate(${Math.random()}deg)`;
+    });
+  }, 100);
 </script>
 
 </body>
