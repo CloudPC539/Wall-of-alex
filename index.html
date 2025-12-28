@@ -2,105 +2,118 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<title>SAFE EVIL — NEXT STAGE</title>
+<title>ULTIMATE SAFE EVIL</title>
 
 <style>
 html, body {
   margin: 0;
   padding: 0;
-  background: #111;
+  background: #000;
   overflow: hidden;
   font-family: monospace;
   cursor: none;
 }
 
-/* START SCREEN */
 #start {
   position: fixed;
   inset: 0;
   background: black;
   color: red;
-  font-size: 38px;
+  font-size: 40px;
   display: flex;
   align-items: center;
   justify-content: center;
-  z-index: 100000;
+  z-index: 1000000;
 }
 
-/* FAKE TAB WINDOW */
-.fake-window {
+/* Fake windows */
+.window {
   position: absolute;
-  width: 320px;
-  height: 220px;
-  border: 2px solid #444;
+  width: 340px;
+  height: 230px;
   background: #000;
-  box-shadow: 0 0 20px red;
+  border: 2px solid #555;
+  box-shadow: 0 0 25px red;
 }
 
-/* FAKE BROWSER BAR */
 .bar {
   height: 22px;
   background: #222;
   color: #aaa;
-  font-size: 12px;
   padding: 2px 6px;
-  white-space: nowrap;
-  overflow: hidden;
+  font-size: 12px;
 }
 
-.fake-window img {
+.window img {
   width: 100%;
   height: calc(100% - 22px);
   object-fit: cover;
-  animation: glitch 0.04s infinite alternate;
+  animation: glitch 0.05s infinite alternate;
 }
 
 @keyframes glitch {
   from { transform: scale(1) rotate(0deg); }
-  to   { transform: scale(1.25) rotate(5deg); }
+  to   { transform: scale(1.3) rotate(6deg); }
 }
 
-/* ERROR POPUPS */
-.error {
+/* Fake alerts */
+.alert {
   position: fixed;
   background: #200;
   color: #f88;
   border: 2px solid red;
   padding: 10px;
   font-size: 14px;
-  z-index: 99999;
+  z-index: 999999;
 }
 
-/* FAKE TASK MANAGER */
-#taskmgr {
+/* Fake progress bar */
+.progress {
+  width: 250px;
+  height: 16px;
+  border: 1px solid #0f0;
+  margin-top: 6px;
+}
+.progress > div {
+  height: 100%;
+  width: 0%;
+  background: #0f0;
+}
+
+/* Fake BSOD */
+#bsod {
+  position: fixed;
+  inset: 0;
+  background: #004;
+  color: #9cf;
+  font-size: 18px;
+  padding: 40px;
+  display: none;
+  z-index: 9999999;
+}
+
+/* Fake stats */
+#stats {
   position: fixed;
   right: 10px;
   bottom: 10px;
-  background: black;
   color: lime;
-  padding: 10px;
   font-size: 12px;
-  border: 1px solid lime;
-  z-index: 99999;
-}
-
-/* FPS COUNTER */
-#fps {
-  position: fixed;
-  left: 10px;
-  bottom: 10px;
-  color: cyan;
-  font-size: 14px;
-  z-index: 99999;
+  z-index: 999999;
 }
 </style>
 </head>
 <body>
 
-<div id="start">CLICK TO START SAFE EVIL</div>
+<div id="start">CLICK TO ENTER ULTIMATE SAFE EVIL</div>
+<div id="bsod">
+  :( <br><br>
+  Your system ran into a problem and needs to restart.<br><br>
+  Collecting error info... 0%<br><br>
+  (This is fake.)
+</div>
 
-<div id="taskmgr"></div>
-<div id="fps"></div>
+<div id="stats"></div>
 
 <audio id="music" src="music.mp3" loop></audio>
 
@@ -108,70 +121,78 @@ html, body {
 const IMAGE_SRC = "image.jpg";
 const start = document.getElementById("start");
 const music = document.getElementById("music");
-const taskmgr = document.getElementById("taskmgr");
-const fpsBox = document.getElementById("fps");
+const bsod = document.getElementById("bsod");
+const stats = document.getElementById("stats");
 
-let fakeFPS = 9999;
-
-// SPAWN FAKE BROWSER WINDOW
+// Spawn fake browser window
 function spawnWindow() {
-  const win = document.createElement("div");
-  win.className = "fake-window";
-  win.style.left = Math.random() * innerWidth + "px";
-  win.style.top = Math.random() * innerHeight + "px";
-  win.style.transform = `rotate(${Math.random()*10}deg)`;
+  const w = document.createElement("div");
+  w.className = "window";
+  w.style.left = Math.random()*innerWidth + "px";
+  w.style.top = Math.random()*innerHeight + "px";
+  w.style.transform = `rotate(${Math.random()*10}deg)`;
 
   const bar = document.createElement("div");
   bar.className = "bar";
-  bar.textContent = "chrome://renderer-crash/?tab=" + Math.floor(Math.random()*9999);
+  bar.textContent = "chrome://system-overload/" + Math.floor(Math.random()*9999);
 
   const img = document.createElement("img");
   img.src = IMAGE_SRC;
 
-  win.appendChild(bar);
-  win.appendChild(img);
-  document.body.appendChild(win);
+  w.appendChild(bar);
+  w.appendChild(img);
+  document.body.appendChild(w);
 }
 
-// ERROR POPUP
-function spawnError() {
-  const err = document.createElement("div");
-  err.className = "error";
-  err.style.left = Math.random()*innerWidth + "px";
-  err.style.top = Math.random()*innerHeight + "px";
-  err.textContent = [
-    "ERROR: Renderer Unresponsive",
-    "Out of Memory",
-    "GPU Process Crashed",
-    "Page Unresponsive",
-    "Stack Overflow Detected"
-  ][Math.floor(Math.random()*5)];
-  document.body.appendChild(err);
+// Fake alert popup
+function spawnAlert(text) {
+  const a = document.createElement("div");
+  a.className = "alert";
+  a.style.left = Math.random()*innerWidth + "px";
+  a.style.top = Math.random()*innerHeight + "px";
+  a.innerHTML = text;
 
-  setTimeout(() => err.remove(), 3000);
+  document.body.appendChild(a);
+  setTimeout(() => a.remove(), 4000);
 }
 
-// LIE TASK MANAGER
-function updateTaskMgr() {
-  taskmgr.innerHTML = `
-CPU: ${(Math.random()*900+100).toFixed(1)}%<br>
-GPU: ${(Math.random()*800+200).toFixed(1)}%<br>
+// Fake antivirus alert
+function antivirusAlert() {
+  spawnAlert(
+    "⚠ ANTIVIRUS ALERT<br>" +
+    "Threats detected: " + Math.floor(Math.random()*999+1) +
+    "<div class='progress'><div></div></div>"
+  );
+}
+
+// Fake overheating
+function heatAlert() {
+  spawnAlert(
+    "🌡 SYSTEM OVERHEATING<br>" +
+    "CPU Temp: " + (Math.random()*40+80).toFixed(1) + "°C"
+  );
+}
+
+// Fake BSOD flash
+function flashBSOD() {
+  bsod.style.display = "block";
+  setTimeout(() => bsod.style.display = "none", 1500);
+}
+
+// Fake stats
+function updateStats() {
+  stats.innerHTML = `
+CPU: ${(Math.random()*800+200).toFixed(0)}%<br>
 RAM: ${(Math.random()*64+32).toFixed(1)} GB<br>
-Tabs: ${document.querySelectorAll(".fake-window").length}
+GPU: ${(Math.random()*700+300).toFixed(0)}%<br>
+Windows: ${document.querySelectorAll(".window").length}
 `;
 }
 
-// FAKE FPS
-function fpsLoop() {
-  fakeFPS += Math.random()*500 - 250;
-  fpsBox.textContent = "FPS: " + Math.max(1, Math.floor(fakeFPS));
-  requestAnimationFrame(fpsLoop);
-}
-
-// ZOOM MADNESS
+// Zoom & shake madness
 setInterval(() => {
   document.body.style.transform =
-    `scale(${0.8 + Math.random()*0.6}) rotate(${Math.random()*2-1}deg)`;
+    `scale(${0.7 + Math.random()*0.7}) rotate(${Math.random()*3-1.5}deg)`;
 }, 200);
 
 // START
@@ -179,18 +200,20 @@ start.onclick = () => {
   start.remove();
   music.play();
 
-  // Spawn windows rapidly
+  // Spawn windows endlessly
   setInterval(() => {
-    for (let i = 0; i < 3; i++) spawnWindow();
-  }, 1000);
+    for (let i = 0; i < 4; i++) spawnWindow();
+  }, 800);
 
-  // Error storms
-  setInterval(spawnError, 500);
+  // Alerts
+  setInterval(antivirusAlert, 1200);
+  setInterval(heatAlert, 1800);
 
-  // Update fake stats
-  setInterval(updateTaskMgr, 300);
+  // Fake crash flashes
+  setInterval(flashBSOD, 6000);
 
-  fpsLoop();
+  // Stats update
+  setInterval(updateStats, 300);
 };
 </script>
 
